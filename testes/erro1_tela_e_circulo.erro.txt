@@ -1,0 +1,2 @@
+Erro semântico: linha 1: a tela precisa ter largura e altura maiores que zero
+Erro semântico: linha 2: o círculo precisa ter raio maior que zero

@@ -1,0 +1,49 @@
+quadro 400 por 300
+-- ceu e grama
+retangulo (0, 0) tamanho 400 por 220 [fundo: celeste, contorno: celeste]
+retangulo (0, 220) tamanho 400 por 80 [fundo: #3CB371, contorno: #3CB371]
+
+-- sol: raios desenhados em (0, 0) e girados dentro da camada deslocada
+camada move(330, 60) {
+    reta (-45, 0) ate (45, 0) [contorno: dourado, espessura: 3]
+    reta (0, -45) ate (0, 45) [contorno: dourado, espessura: 3]
+    camada gira(45) {
+        reta (-45, 0) ate (45, 0) [contorno: dourado, espessura: 3]
+        reta (0, -45) ate (0, 45) [contorno: dourado, espessura: 3]
+    }
+    circulo (0, 0) raio 25 [fundo: amarelo, contorno: dourado, espessura: 2]
+}
+
+-- casa: origem no topo do telhado
+camada move(130, 60) {
+    -- chamine (fica atras do telhado)
+    retangulo (35, 15) tamanho 18 por 50 [fundo: cinza]
+    -- telhado: quadrado girado 45 graus; a metade de baixo fica atras da parede
+    camada gira(45) {
+        retangulo (0, 0) tamanho 113.14 por 113.14 [fundo: vinho]
+    }
+    -- parede
+    retangulo (-80, 80) tamanho 160 por 100 [fundo: bege]
+    -- porta e macaneta
+    retangulo (-15, 120) tamanho 30 por 60 [fundo: marrom]
+    circulo (8, 152) raio 3 [fundo: dourado]
+    -- janelas: cada uma em coordenadas locais
+    camada move(-62, 100) {
+        retangulo (0, 0) tamanho 32 por 32 [fundo: branco]
+        reta (16, 0) ate (16, 32)
+        reta (0, 16) ate (32, 16)
+    }
+    camada move(30, 100) {
+        retangulo (0, 0) tamanho 32 por 32 [fundo: branco]
+        reta (16, 0) ate (16, 32)
+        reta (0, 16) ate (32, 16)
+    }
+}
+
+-- arvore: origem na base do tronco
+camada move(310, 250) {
+    retangulo (-8, -60) tamanho 16 por 60 [fundo: marrom]
+    circulo (-18, -70) raio 22 [fundo: verde, contorno: #006400]
+    circulo (18, -70) raio 22 [fundo: verde, contorno: #006400]
+    circulo (0, -95) raio 24 [fundo: verde, contorno: #006400]
+}

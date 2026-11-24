@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Documento de semântica · Fase 2 · Linguagem Quadro</title>
+<style>
+  body { font-family: "DejaVu Sans", Arial, sans-serif; font-size: 10.5pt; margin: 1.6cm; color: #222; }
+  h1 { font-size: 17pt; margin-bottom: 0; }
+  h2 { font-size: 13pt; border-bottom: 1px solid #999; margin-top: 18px; }
+  table { border-collapse: collapse; width: 100%; margin: 6px 0; }
+  th, td { border: 1px solid #aaa; padding: 4px 6px; vertical-align: top; text-align: left; }
+  th { background: #eee; }
+  code, pre { font-family: "DejaVu Sans Mono", monospace; font-size: 9pt; }
+  pre { background: #f5f5f5; padding: 6px; border: 1px solid #ddd; white-space: pre-wrap; }
+  .sub { color: #555; margin-top: 2px; }
+  .sw { display: inline-block; width: 12px; height: 12px; border: 1px solid #444; vertical-align: middle; }
+</style>
+</head>
+<body>
+<h1>Documento de semântica · Fase 2</h1>
+<p class="sub">Linguagem de desenho “Quadro” · da AST ao SVG</p>
+
+<h2>1. Gramática (EBNF) e AST</h2>
+<pre>programa    → tela comando*
+tela        → "quadro" NUM "por" NUM
+comando     → reta | circulo | retangulo | camada
+reta        → "reta" ponto "ate" ponto estilo?
+circulo     → "circulo" ponto "raio" NUM estilo?
+retangulo   → "retangulo" ponto "tamanho" NUM "por" NUM estilo?
+ponto       → "(" NUM "," NUM ")"
+estilo      → "[" ( atributo ( "," atributo )* )? "]"
+atributo    → "contorno" ":" cor | "fundo" ":" cor | "espessura" ":" NUM
+cor         → COR | HEX
+camada      → "camada" modificador* "{" comando* "}"
+modificador → "move" "(" NUM "," NUM ")" | "gira" "(" NUM ")"</pre>
+<p>Comentários começam com <code>--</code> e vão até o fim da linha. <code>NUM</code> aceita inteiros e decimais, com sinal opcional (<code>-12</code>, <code>113.14</code>).
+Todo nó que pode ter erro semântico (Tela, Reta, Circulo, Retangulo, Camada) guarda o campo <code>linha</code>, preenchido pelo parser com a linha da palavra-chave que inicia o nó.</p>
+
+<h2>2. Tabela de mapeamento: nó da AST → SVG</h2>
+<table>
+<tr><th>Nó da AST</th><th>Exemplo na linguagem</th><th>SVG gerado</th></tr>
+<tr><td><code>Programa { tela, comandos }</code></td><td>o programa inteiro</td><td>o <code>&lt;svg&gt;</code> da tela com os comandos dentro, na ordem do programa</td></tr>
+<tr><td><code>Tela { largura, altura }</code></td><td><code>quadro 400 por 300</code></td><td><code>&lt;svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"&gt;</code></td></tr>
+<tr><td><code>Reta { x1, y1, x2, y2, estilo }</code></td><td><code>reta (0, 0) ate (20, 0)</code></td><td><code>&lt;line x1="0" y1="0" x2="20" y2="0" fill="none" stroke="black" stroke-width="1"/&gt;</code></td></tr>
+<tr><td><code>Circulo { cx, cy, raio, estilo }</code></td><td><code>circulo (50, 50) raio 25</code></td><td><code>&lt;circle cx="50" cy="50" r="25" fill="none" stroke="black" stroke-width="1"/&gt;</code></td></tr>
+<tr><td><code>Retangulo { x, y, largura, altura, estilo }</code></td><td><code>retangulo (10, 20) tamanho 80 por 40</code></td><td><code>&lt;rect x="10" y="20" width="80" height="40" fill="none" stroke="black" stroke-width="1"/&gt;</code></td></tr>
+<tr><td>atributo <code>Fundo { cor }</code></td><td><code>[fundo: azul]</code></td><td><code>fill="blue"</code></td></tr>
+<tr><td>atributo <code>Contorno { cor }</code></td><td><code>[contorno: #FF0000]</code></td><td><code>stroke="#FF0000"</code></td></tr>
+<tr><td>atributo <code>Espessura { valor }</code></td><td><code>[espessura: 3]</code></td><td><code>stroke-width="3"</code></td></tr>
+<tr><td>estilo ausente (lista vazia)</td><td><code>circulo (0, 0) raio 5</code></td><td><code>fill="none" stroke="black" stroke-width="1"</code></td></tr>
+<tr><td><code>Camada { modificadores, comandos }</code></td><td><code>camada move(70, 190) { ... }</code></td><td><code>&lt;g transform="translate(70 190)"&gt; ... &lt;/g&gt;</code> (filhos gerados recursivamente)</td></tr>
+<tr><td>modificador <code>Move { x, y }</code></td><td><code>move(70, 190)</code></td><td><code>translate(70 190)</code></td></tr>
+<tr><td>modificador <code>Gira { angulo }</code></td><td><code>gira(45)</code></td><td><code>rotate(45)</code></td></tr>
+<tr><td>vários modificadores</td><td><code>camada move(80, 60) gira(30) {…}</code></td><td><code>&lt;g transform="translate(80 60) rotate(30)"&gt;</code> (ordem escrita)</td></tr>
+<tr><td>camada sem modificadores</td><td><code>camada { ... }</code></td><td><code>&lt;g&gt; ... &lt;/g&gt;</code> (sem atributo transform)</td></tr>
+</table>
+
+<h2>3. Tabela de cores</h2>
+<table>
+<tr><th>Na linguagem</th><th>No SVG</th><th></th><th>Na linguagem</th><th>No SVG</th><th></th></tr>
+<tr><td>preto</td><td>black</td><td><span class="sw" style="background:black"></span></td><td>roxo</td><td>purple</td><td><span class="sw" style="background:purple"></span></td></tr>
+<tr><td>branco</td><td>white</td><td><span class="sw" style="background:white"></span></td><td>rosa</td><td>pink</td><td><span class="sw" style="background:pink"></span></td></tr>
+<tr><td>vermelho</td><td>red</td><td><span class="sw" style="background:red"></span></td><td>marrom</td><td>saddlebrown</td><td><span class="sw" style="background:saddlebrown"></span></td></tr>
+<tr><td>verde</td><td>green</td><td><span class="sw" style="background:green"></span></td><td>cinza</td><td>gray</td><td><span class="sw" style="background:gray"></span></td></tr>
+<tr><td>azul</td><td>blue</td><td><span class="sw" style="background:blue"></span></td><td>celeste</td><td>skyblue</td><td><span class="sw" style="background:skyblue"></span></td></tr>
+<tr><td>amarelo</td><td>yellow</td><td><span class="sw" style="background:yellow"></span></td><td>dourado</td><td>gold</td><td><span class="sw" style="background:gold"></span></td></tr>
+<tr><td>laranja</td><td>orange</td><td><span class="sw" style="background:orange"></span></td><td>bege</td><td>beige</td><td><span class="sw" style="background:beige"></span></td></tr>
+<tr><td>vinho</td><td>darkred</td><td><span class="sw" style="background:darkred"></span></td><td>transparente</td><td>none</td><td>(sem cor)</td></tr>
+<tr><td colspan="6"><code>#RRGGBB</code> (token HEX, por exemplo <code>#3CB371</code>) passa direto para o SVG, sem conversão.</td></tr>
+</table>
+
+<h2>4. Verificação semântica</h2>
+<table>
+<tr><th>Nó</th><th>Condição de erro</th><th>Mensagem (a página mostra “Erro semântico: linha N: …”)</th></tr>
+<tr><td>Tela</td><td><code>largura &lt;= 0</code> ou <code>altura &lt;= 0</code></td><td>a tela precisa ter largura e altura maiores que zero</td></tr>
+<tr><td>Circulo</td><td><code>raio &lt;= 0</code></td><td>o círculo precisa ter raio maior que zero</td></tr>
+<tr><td>Retangulo</td><td><code>largura &lt;= 0</code> ou <code>altura &lt;= 0</code></td><td>o retângulo precisa ter largura e altura maiores que zero</td></tr>
+</table>
+<p><code>verificar(ast)</code> visita a tela e depois cada comando com uma função recursiva que desce em todas as camadas (inclusive aninhadas). Ela não para no primeiro erro: junta todos em <code>[ { linha, mensagem } ]</code>.</p>
+
+<h2>5. Decisões de projeto</h2>
+<ul>
+<li><b>Padrões sempre explícitos:</b> toda forma recebe os três atributos <code>fill</code>, <code>stroke</code> e <code>stroke-width</code>. O gerador parte dos padrões (<code>none</code>, <code>black</code>, <code>1</code>) e aplica os atributos na ordem escrita, então <b>o último atributo repetido vale</b>. A reta também recebe <code>fill="none"</code>, para manter a regra uniforme.</li>
+<li><b>Estilo na AST como lista:</b> o parser guarda os atributos em uma lista, na ordem em que foram escritos, sem resolver repetições. Quem decide que o último vale é o gerador. Assim a AST continua fiel ao programa.</li>
+<li><b>Cores ficam como lexema na AST:</b> a tradução para nome de cor do SVG (tabela acima) acontece só no gerador. A cor <code>transparente</code> vira <code>none</code>.</li>
+<li><b>Camada sem modificadores:</b> gera <code>&lt;g&gt;</code> sem o atributo <code>transform</code> (em vez de <code>transform=""</code>). Ela só agrupa os filhos, sem mudar as coordenadas. Uma camada vazia (<code>camada { }</code>) gera <code>&lt;g&gt;&lt;/g&gt;</code>, que é válido.</li>
+<li><b>Modificadores na ordem escrita:</b> cada modificador vira uma função de transformação, e elas são unidas por espaço na mesma ordem da AST (<code>move</code> → <code>translate</code>, <code>gira</code> → <code>rotate</code>, em graus e no sentido horário). Modificadores repetidos (<code>gira(10) gira(20)</code>) são todos mantidos.</li>
+<li><b>Gerador recursivo:</b> <code>gerarNo(no, nivel)</code> trata cada tipo de nó e, para a Camada, chama a si mesma em cada filho com <code>nivel + 1</code>, o que também indenta o SVG.</li>
+<li><b>Valores negativos:</b> a gramática aceita sinal em <code>NUM</code> (útil para coordenadas locais em torno de (0, 0)). Por isso as verificações usam <code>&lt;= 0</code>: raio, largura e altura negativos também são erro semântico, com a mesma mensagem “maior que zero”.</li>
+<li><b>Linha dos nós:</b> é a linha da palavra-chave que abre o nó (<code>quadro</code>, <code>circulo</code>, <code>retangulo</code>…), tirada do token pelo parser.</li>
+<li><b>Ordem das fases:</b> respeitada pelo <code>main.js</code>. Com erro semântico, <code>gerarSVG</code> não é chamado.</li>
+</ul>
+</body>
+</html>

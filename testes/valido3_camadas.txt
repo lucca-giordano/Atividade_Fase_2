@@ -1,0 +1,12 @@
+quadro 300 por 300
+-- camada com deslocamento, rotacao e camada sem modificadores
+camada move(150, 150) {
+    retangulo (-50, -50) tamanho 100 por 100 [contorno: cinza]
+    camada gira(45) {
+        retangulo (-50, -50) tamanho 100 por 100 [contorno: vermelho, espessura: 2]
+    }
+    circulo (0, 0) raio 10 [fundo: preto]
+}
+camada {
+    reta (0, 0) ate (300, 300) [contorno: celeste]
+}

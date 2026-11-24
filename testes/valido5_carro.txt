@@ -1,0 +1,12 @@
+quadro 400 por 300
+-- um carro simples (o exemplo do enunciado na linguagem Quadro)
+retangulo (50, 150) tamanho 200 por 60 [fundo: azul]
+camada move(70, 190) {
+    circulo (0, 0) raio 25 [fundo: preto]
+    camada gira(45) {
+        reta (0, 0) ate (20, 0) [contorno: branco, espessura: 2]
+    }
+}
+camada move(200, 190) {
+    circulo (0, 0) raio 25 [fundo: preto]
+}

@@ -1,0 +1,2 @@
+quadro 0 por 300
+circulo (50, 50) raio 0

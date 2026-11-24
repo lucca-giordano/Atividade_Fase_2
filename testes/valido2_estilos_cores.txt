@@ -1,0 +1,7 @@
+quadro 400 por 200
+-- nomes de cor, #RRGGBB e atributo repetido (vale o ultimo)
+retangulo (20, 20) tamanho 110 por 80 [fundo: vermelho, contorno: preto, espessura: 4]
+circulo (200, 60) raio 40 [fundo: #3366CC, contorno: dourado, espessura: 6]
+retangulo (270, 20) tamanho 110 por 80 [fundo: azul, fundo: verde, espessura: 2, espessura: 8]
+reta (20, 150) ate (380, 150) [contorno: laranja, espessura: 10]
+reta (20, 180) ate (380, 180) [contorno: #8A2BE2, espessura: 3]

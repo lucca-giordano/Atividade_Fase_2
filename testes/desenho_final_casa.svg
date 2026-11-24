@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect x="0" y="0" width="400" height="220" fill="skyblue" stroke="skyblue" stroke-width="1"/>
+  <rect x="0" y="220" width="400" height="80" fill="#3CB371" stroke="#3CB371" stroke-width="1"/>
+  <g transform="translate(330 60)">
+    <line x1="-45" y1="0" x2="45" y2="0" fill="none" stroke="gold" stroke-width="3"/>
+    <line x1="0" y1="-45" x2="0" y2="45" fill="none" stroke="gold" stroke-width="3"/>
+    <g transform="rotate(45)">
+      <line x1="-45" y1="0" x2="45" y2="0" fill="none" stroke="gold" stroke-width="3"/>
+      <line x1="0" y1="-45" x2="0" y2="45" fill="none" stroke="gold" stroke-width="3"/>
+    </g>
+    <circle cx="0" cy="0" r="25" fill="yellow" stroke="gold" stroke-width="2"/>
+  </g>
+  <g transform="translate(130 60)">
+    <rect x="35" y="15" width="18" height="50" fill="gray" stroke="black" stroke-width="1"/>
+    <g transform="rotate(45)">
+      <rect x="0" y="0" width="113.14" height="113.14" fill="darkred" stroke="black" stroke-width="1"/>
+    </g>
+    <rect x="-80" y="80" width="160" height="100" fill="beige" stroke="black" stroke-width="1"/>
+    <rect x="-15" y="120" width="30" height="60" fill="saddlebrown" stroke="black" stroke-width="1"/>
+    <circle cx="8" cy="152" r="3" fill="gold" stroke="black" stroke-width="1"/>
+    <g transform="translate(-62 100)">
+      <rect x="0" y="0" width="32" height="32" fill="white" stroke="black" stroke-width="1"/>
+      <line x1="16" y1="0" x2="16" y2="32" fill="none" stroke="black" stroke-width="1"/>
+      <line x1="0" y1="16" x2="32" y2="16" fill="none" stroke="black" stroke-width="1"/>
+    </g>
+    <g transform="translate(30 100)">
+      <rect x="0" y="0" width="32" height="32" fill="white" stroke="black" stroke-width="1"/>
+      <line x1="16" y1="0" x2="16" y2="32" fill="none" stroke="black" stroke-width="1"/>
+      <line x1="0" y1="16" x2="32" y2="16" fill="none" stroke="black" stroke-width="1"/>
+    </g>
+  </g>
+  <g transform="translate(310 250)">
+    <rect x="-8" y="-60" width="16" height="60" fill="saddlebrown" stroke="black" stroke-width="1"/>
+    <circle cx="-18" cy="-70" r="22" fill="green" stroke="#006400" stroke-width="1"/>
+    <circle cx="18" cy="-70" r="22" fill="green" stroke="#006400" stroke-width="1"/>
+    <circle cx="0" cy="-95" r="24" fill="green" stroke="#006400" stroke-width="1"/>
+  </g>
+</svg>

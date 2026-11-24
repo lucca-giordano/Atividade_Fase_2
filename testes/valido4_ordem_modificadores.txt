@@ -1,0 +1,13 @@
+quadro 300 por 200
+-- a ordem dos modificadores muda o desenho
+-- origem e eixos de referencia
+reta (0, 0) ate (300, 0) [contorno: cinza, espessura: 2]
+reta (0, 0) ate (0, 200) [contorno: cinza, espessura: 2]
+-- primeiro move, depois gira: o quadrado gira no proprio lugar
+camada move(80, 60) gira(30) {
+    retangulo (0, 0) tamanho 50 por 50 [fundo: azul]
+}
+-- primeiro gira, depois move: o deslocamento acontece no eixo ja girado
+camada gira(30) move(80, 60) {
+    retangulo (0, 0) tamanho 50 por 50 [fundo: vermelho]
+}

@@ -1,0 +1,5 @@
+quadro 300 por 200
+-- as tres formas sem estilo: traco preto, espessura 1, sem preenchimento
+reta (20, 20) ate (280, 20)
+circulo (80, 110) raio 50
+retangulo (160, 60) tamanho 120 por 100

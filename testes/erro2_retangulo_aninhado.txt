@@ -1,0 +1,7 @@
+quadro 300 por 200
+retangulo (10, 10) tamanho 50 por 50
+camada move(100, 100) {
+    camada gira(30) {
+        retangulo (0, 0) tamanho 80 por 0 [fundo: verde]
+    }
+}
